@@ -1,0 +1,1 @@
+A collection of files that have to do with tinkiering with audio, mostly in Python.
