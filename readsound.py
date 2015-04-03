@@ -28,4 +28,7 @@ if __name__ == "__main__":
     plt.plot(data)
     plt.show()
 
+    s.close_stream()
     s.close()
+
+    p.terminate()
