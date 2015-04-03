@@ -11,7 +11,7 @@ if __name__ == "__main__":
     FORMAT = pyaudio.paInt16
 
     recording_time = 10
-
+    chunks = recording_time * RATE / FRAMES
 
     p = pyaudio.PyAudio();
     s = p.open(rate = RATE,
@@ -20,7 +20,10 @@ if __name__ == "__main__":
                frames_per_buffer = FRAMES,
                input = True)
 
-    data = s.read(FRAMES)
+    data = ''
+    for i in range(0, chunks):
+        data += s.read(FRAMES)
+
     data = numpy.fromstring(data,dtype=numpy.int16)
     plt.plot(data)
     plt.show()
