@@ -57,11 +57,3 @@ while True:
     #plt.draw()
     time.sleep(0.1)
     plt.pause(0.0001)
-
-
-#wf = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
-#wf.setnchannels(CHANNELS)
-#wf.setsampwidth(p.get_sample_size(FORMAT))
-#wf.setframerate(RATE)
-#wf.writeframes(b''.join(frames))
-#wf.close()
