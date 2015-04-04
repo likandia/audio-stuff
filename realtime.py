@@ -1,11 +1,8 @@
 import pyaudio
-import wave
-import matplotlib
 import matplotlib.pyplot as plt
 import numpy
 import threading
 import time
-import sys
 
 CHUNK = 128 #1024
 FORMAT = pyaudio.paInt16 # Try paFloat32 too
