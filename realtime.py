@@ -12,7 +12,6 @@ FORMAT = pyaudio.paInt16 # Try paFloat32 too
 CHANNELS = 2
 RATE = 48000
 RECORD_SECONDS = 10
-WAVE_OUTPUT_FILENAME = "output.wav"
 
 def getaudio():
     frames = ''
