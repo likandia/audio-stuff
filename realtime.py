@@ -14,6 +14,7 @@ def getaudio():
     frames = ''
     for i in range(0, int(RATE / (CHUNK) * RECORD_SECONDS)):
         p = pyaudio.PyAudio()
+
         stream = p.open(format=FORMAT,
                     channels=CHANNELS,
                     rate=RATE,
@@ -22,14 +23,15 @@ def getaudio():
 
         data = stream.read(CHUNK)
         frames += data
-
         final = numpy.fromstring(frames, dtype=numpy.int16)
         final = abs(final)
         final = final - 500
         masked = numpy.ma.masked_where(final < 0, final)
         masked.fill_value = 0
         final = numpy.ma.filled(masked)
+
         plt.plot(final)
+
         stream.stop_stream()
         stream.close()
         time.sleep(0.0001)
