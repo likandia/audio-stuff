@@ -14,14 +14,6 @@ RATE = 48000
 RECORD_SECONDS = 10
 WAVE_OUTPUT_FILENAME = "output.wav"
 
-
-frames = ''
-final = numpy.fromstring(frames, dtype=numpy.int16)
-
-plt.ion()
-plt.plot([0, 1])
-
-
 def getaudio():
     frames = ''
     for i in range(0, int(RATE / (CHUNK) * RECORD_SECONDS)):
@@ -48,12 +40,22 @@ def getaudio():
         print final
         p.terminate()
 
-t0 = threading.Thread(target=getaudio)
-t0.start()
+def main():
+    frames = ''
+    final = numpy.fromstring(frames, dtype=numpy.int16)
 
-while True:
-    print "drawing"
-    plt.clf()
-    #plt.draw()
-    time.sleep(0.1)
-    plt.pause(0.0001)
+    plt.ion()
+    plt.plot([0, 1])
+
+    t0 = threading.Thread(target=getaudio)
+    t0.start()
+
+    while True:
+        print "drawing"
+        plt.clf()
+        #plt.draw()
+        time.sleep(0.1)
+        plt.pause(0.0001)
+
+if __name__ == "__main__":
+    main()
