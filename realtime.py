@@ -12,9 +12,9 @@ RECORD_SECONDS = 10
 
 def getaudio():
     frames = ''
-    for i in range(0, int(RATE / (CHUNK) * RECORD_SECONDS)):
-        p = pyaudio.PyAudio()
+    p = pyaudio.PyAudio()
 
+    for i in range(0, int(RATE / (CHUNK) * RECORD_SECONDS)):
         stream = p.open(format=FORMAT,
                     channels=CHANNELS,
                     rate=RATE,
@@ -36,7 +36,8 @@ def getaudio():
         stream.close()
         time.sleep(0.0001)
         print final
-        p.terminate()
+
+    p.terminate()
 
 def main():
     frames = ''
