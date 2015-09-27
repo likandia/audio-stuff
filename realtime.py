@@ -13,33 +13,48 @@ RECORD_SECONDS = 10
 frames = ''
 final = numpy.fromstring(frames, dtype=numpy.int16)
 
+def callback(in_data, frame_count, time_info, status):
+    final = numpy.fromstring(in_data, dtype=numpy.int16)
+    final = abs(final)
+    final = final
+    masked = numpy.ma.masked_where(final < 0, final)
+    masked.fill_value = 0
+    final = numpy.ma.filled(masked)
+
+    plt.plot(final[-3000:], 'b')
+    print final
+    return (in_data, pyaudio.paContinue)
+
 def getaudio():
     frames = ''
     p = pyaudio.PyAudio()
-
-    for i in range(0, int(RATE / (CHUNK) * RECORD_SECONDS)):
-        stream = p.open(format=FORMAT,
+    #for i in range(0, int(RATE / (CHUNK) * RECORD_SECONDS)):
+    stream = p.open(format=FORMAT,
                     channels=CHANNELS,
-                    rate=RATE,
+                    rate=RATE, #sampling rate
                     input=True,
-                    frames_per_buffer=CHUNK)
+                    frames_per_buffer=CHUNK,
+                    stream_callback=callback)
+    stream.start_stream()
+    time.sleep(10)
+    
+        #data = stream.read(CHUNK)
+#        frames += data
+ #       final = numpy.fromstring(frames, dtype=numpy.int16)
+  #      final = abs(final)
+   #     final = final - 500
+    #    masked = numpy.ma.masked_where(final < 0, final)
+      #  masked.fill_value = 0
+     #   final = numpy.ma.filled(masked)
 
-        data = stream.read(CHUNK)
-        frames += data
-        final = numpy.fromstring(frames, dtype=numpy.int16)
-        final = abs(final)
-        final = final - 500
-        masked = numpy.ma.masked_where(final < 0, final)
-        masked.fill_value = 0
-        final = numpy.ma.filled(masked)
+        #plt.plot(final[-3000:], 'b')
 
-        plt.plot(final)
-
-        stream.stop_stream()
-        stream.close()
-        time.sleep(0.0001)
-        print final
-
+        #stream.stop_stream()
+        #stream.close()
+        #time.sleep(0.0001)
+        #print final
+    stream.stop_stream()
+    stream.close()
     p.terminate()
 
 
