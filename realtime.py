@@ -14,14 +14,16 @@ frames = ''
 final = numpy.fromstring(frames, dtype=numpy.int16)
 
 def callback(in_data, frame_count, time_info, status):
-    final = numpy.fromstring(in_data, dtype=numpy.int16)
+    global frames
+    frames += in_data
+    final = numpy.fromstring(frames, dtype=numpy.int16)
     final = abs(final)
     final = final
     masked = numpy.ma.masked_where(final < 0, final)
     masked.fill_value = 0
     final = numpy.ma.filled(masked)
 
-    plt.plot(final[-3000:], 'b')
+    plt.plot(final[-1500:], 'b')
     print final
     return (in_data, pyaudio.paContinue)
 
@@ -37,22 +39,22 @@ def getaudio():
                     stream_callback=callback)
     stream.start_stream()
     time.sleep(10)
-    
-        #data = stream.read(CHUNK)
-#        frames += data
- #       final = numpy.fromstring(frames, dtype=numpy.int16)
-  #      final = abs(final)
-   #     final = final - 500
-    #    masked = numpy.ma.masked_where(final < 0, final)
-      #  masked.fill_value = 0
-     #   final = numpy.ma.filled(masked)
 
-        #plt.plot(final[-3000:], 'b')
+    #data = stream.read(CHUNK)
+    #frames += data
+    #final = numpy.fromstring(frames, dtype=numpy.int16)
+    #final = abs(final)
+    #final = final - 500
+    #masked = numpy.ma.masked_where(final < 0, final)
+    #masked.fill_value = 0
+    #final = numpy.ma.filled(masked)
 
-        #stream.stop_stream()
-        #stream.close()
-        #time.sleep(0.0001)
-        #print final
+    #plt.plot(final[-3000:], 'b')
+
+    #stream.stop_stream()
+    #stream.close()
+    #time.sleep(0.0001)
+    #print final
     stream.stop_stream()
     stream.close()
     p.terminate()
