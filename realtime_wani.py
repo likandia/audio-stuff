@@ -17,10 +17,10 @@ RECORD_SECONDS = 20
 frames = ''
 final = numpy.fromstring(frames, dtype=numpy.int16)
 
-#wf = wave.open(sys.argv[1], 'wb')
-#wf.setnchannels(CHANNELS)
-#wf.setsampwidth(2)
-#wf.setframerate(RATE)
+wf = wave.open(sys.argv[1], 'wb')
+wf.setnchannels(CHANNELS)
+wf.setsampwidth(2)
+wf.setframerate(RATE/4)
 
 app = QtGui.QApplication([])
 mw = QtGui.QMainWindow()
@@ -43,7 +43,7 @@ def callback(in_data, frame_count, time_info, status):
     masked = numpy.ma.masked_where(final < 0, final)
     masked.fill_value = 0
     final = numpy.ma.filled(masked)
-    #wf.writeframes(in_data)
+    wf.writeframes(in_data)
 
     curve.setData(final[-20000:])
     #w1.plot(final[-3000:])
