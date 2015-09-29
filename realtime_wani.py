@@ -5,8 +5,10 @@ from pyqtgraph.Qt import QtGui, QtCore
 import numpy
 import threading
 import time
+import wave
+import sys
 
-CHUNK = 64 #1024
+CHUNK = 128 #1024
 FORMAT = pyaudio.paInt16 # Try paFloat32 too
 CHANNELS = 2
 RATE = 48000
@@ -15,17 +17,22 @@ RECORD_SECONDS = 20
 frames = ''
 final = numpy.fromstring(frames, dtype=numpy.int16)
 
+#wf = wave.open(sys.argv[1], 'wb')
+#wf.setnchannels(CHANNELS)
+#wf.setsampwidth(2)
+#wf.setframerate(RATE)
+
 app = QtGui.QApplication([])
 mw = QtGui.QMainWindow()
 mw.resize(800, 800)
-view = pg.GraphicsLayoutWidget() 
+view = pg.GraphicsLayoutWidget()
 mw.setCentralWidget(view)
 mw.show()
 
 
-w1 = view.addPlot(title = "pH vs alcohol in red Wines")
+w1 = view.addPlot(title = "Amplitude vs Time")
 w1.setRange(xRange=[0.0, 20000.0], yRange=[0.0, 50000.0])
-curve = w1.plot()
+curve = w1.plot(pen='g')
 
 def callback(in_data, frame_count, time_info, status):
     global frames, final, curve
@@ -36,6 +43,7 @@ def callback(in_data, frame_count, time_info, status):
     masked = numpy.ma.masked_where(final < 0, final)
     masked.fill_value = 0
     final = numpy.ma.filled(masked)
+    #wf.writeframes(in_data)
 
     curve.setData(final[-20000:])
     #w1.plot(final[-3000:])
