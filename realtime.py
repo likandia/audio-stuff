@@ -4,11 +4,11 @@ import numpy
 import threading
 import time
 
-CHUNK = 128 #1024
+CHUNK = 8 #1024
 FORMAT = pyaudio.paInt16 # Try paFloat32 too
 CHANNELS = 2
 RATE = 48000
-RECORD_SECONDS = 10
+RECORD_SECONDS = 20
 
 frames = ''
 final = numpy.fromstring(frames, dtype=numpy.int16)
@@ -23,7 +23,9 @@ def callback(in_data, frame_count, time_info, status):
     masked.fill_value = 0
     final = numpy.ma.filled(masked)
 
-    plt.plot(final[-1500:], 'b')
+    plt.plot(final[-3000:], 'b')
+    plt.ylim(0.0, 50000.0)
+    #plt.pause(0.0001)
     print final
     return (in_data, pyaudio.paContinue)
 
@@ -38,7 +40,7 @@ def getaudio():
                     frames_per_buffer=CHUNK,
                     stream_callback=callback)
     stream.start_stream()
-    time.sleep(10)
+    time.sleep(RECORD_SECONDS)
 
     #data = stream.read(CHUNK)
     #frames += data
