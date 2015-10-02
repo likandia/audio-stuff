@@ -15,7 +15,8 @@ RATE = 48000
 RECORD_SECONDS = 20
 
 class Recorder(QtGui.QMainWindow):
-    def __init__(self):
+    def __init__(self, parent = None):
+        super(Recorder, self).__init__(parent)
         view = pg.GraphicsLayoutWidget()
         w1 = view.addPlot(title = "Amplitude vs Time")
         w1.setRange(xRange = [0.0, 20000.0], yRange = [0.0, 50000.0])
