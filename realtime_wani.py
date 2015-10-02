@@ -65,10 +65,6 @@ class Recorder(QMainWindow):
         p.terminate()
 
 
-def main():
-    frames = ''
-    final = numpy.fromstring(frames, dtype=numpy.int16)
-
 if __name__ == "__main__":
     import sys
     if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
