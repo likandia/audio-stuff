@@ -63,7 +63,7 @@ class Recorder(QtGui.QMainWindow):
                         frames_per_buffer=CHUNK,
                         stream_callback=self.callback)
         stream.start_stream()
-        time.sleep(20)
+        time.sleep(2)
         stream.stop_stream()
         stream.close()
         p.terminate()
