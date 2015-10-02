@@ -68,8 +68,5 @@ class Recorder(QMainWindow):
 if __name__ == "__main__":
     import sys
     if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
-            timer = QtCore.QTimer()
-            timer.timeout.connect(getaudio)
-            timer.start(1)
 
             pg.QtGui.QApplication.instance().exec_()
