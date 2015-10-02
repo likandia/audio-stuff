@@ -43,7 +43,6 @@ class Recorder(QtGui.QMainWindow):
         self.frames += in_data
         self.final = numpy.fromstring(self.frames, dtype=numpy.int16)
         self.final = abs(self.final)
-        self.final = self.final
         masked = numpy.ma.masked_where(self.final < 0, self.final)
         masked.fill_value = 0
         self.final = numpy.ma.filled(masked)
