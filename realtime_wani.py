@@ -46,7 +46,7 @@ class Recorder(QtGui.QMainWindow):
         masked = numpy.ma.masked_where(self.final < 0, self.final)
         masked.fill_value = 0
         self.final = numpy.ma.filled(masked)
-        self.wf.writeframes(in_data)
+        #self.wf.writeframes(in_data)
 
         #self.curve.setData(self.final[-20000:])
         app.processEvents()
@@ -63,11 +63,15 @@ class Recorder(QtGui.QMainWindow):
                         frames_per_buffer=CHUNK,
                         stream_callback=self.callback)
         while(True):
-            stream.start_stream()
-            time.sleep(0.001)
-            stream.stop_stream()
-            self.curve.setData(self.final[-20000:])
-            app.processEvents()
+            try:
+                stream.start_stream()
+                time.sleep(0.01)
+                stream.stop_stream()
+                self.curve.setData(self.final[-50000:])
+                app.processEvents()
+            except KeyboardInterrupt:
+                self.wf.writeframes(self.frames)
+                break
 
         stream.close()
         p.terminate()
