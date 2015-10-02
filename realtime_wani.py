@@ -26,7 +26,7 @@ class Recorder(QtGui.QMainWindow):
         self.setCentralWidget(view)
 
         self.frames = ''
-        self.final = numpy.fromstring(frames, dtype=numpy.int16)
+        self.final = numpy.fromstring(self.frames, dtype=numpy.int16)
 
         self.wf = wave.open(sys.argv[1], 'wb')
         self.wf.setnchannels(CHANNELS)
