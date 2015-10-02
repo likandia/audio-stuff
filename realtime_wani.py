@@ -8,7 +8,7 @@ import time
 import wave
 import sys
 
-CHUNK = 128 #1024
+CHUNK = 1024 #1024
 FORMAT = pyaudio.paInt16 # Try paFloat32 too
 CHANNELS = 2
 RATE = 48000
