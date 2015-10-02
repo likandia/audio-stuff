@@ -14,55 +14,55 @@ CHANNELS = 2
 RATE = 48000
 RECORD_SECONDS = 20
 
-frames = ''
-final = numpy.fromstring(frames, dtype=numpy.int16)
+class Recorder(QMainWindow):
+    def __init__(self):
+        view = pg.GraphicsLayoutWidget()
+        w1 = view.addPlot(title = "Amplitude vs Time")
+        w1.setRange(xRange = [0.0, 20000.0], yRange = [0.0, 50000.0])
+        self.curve = w1.plot(pen = 'g')
 
-wf = wave.open(sys.argv[1], 'wb')
-wf.setnchannels(CHANNELS)
-wf.setsampwidth(2)
-wf.setframerate(RATE/4)
+        self.resize(800, 800)
+        self.setCentralWidget(view)
 
-app = QtGui.QApplication([])
-mw = QtGui.QMainWindow()
-mw.resize(800, 800)
-view = pg.GraphicsLayoutWidget()
-mw.setCentralWidget(view)
-mw.show()
+        self.frames = ''
+        self.final = numpy.fromstring(frames, dtype=numpy.int16)
 
+        self.wf = wave.open(sys.argv[1], 'wb')
+        self.wf.setnchannels(CHANNELS)
+        self.wf.setsampwidth(2)
+        self.wf.setframerate(RATE/4)
 
-w1 = view.addPlot(title = "Amplitude vs Time")
-w1.setRange(xRange=[0.0, 20000.0], yRange=[0.0, 50000.0])
-curve = w1.plot(pen='g')
+        timer = QtCore.QTimer()
+        timer.timeout.connect(self.getaudio)
+        timer.start(1)
 
-def callback(in_data, frame_count, time_info, status):
-    global frames, final, curve
-    frames += in_data
-    final = numpy.fromstring(frames, dtype=numpy.int16)
-    final = abs(final)
-    final = final
-    masked = numpy.ma.masked_where(final < 0, final)
-    masked.fill_value = 0
-    final = numpy.ma.filled(masked)
-    wf.writeframes(in_data)
+    def callback(self, in_data, frame_count, time_info, status):
+        self.frames += in_data
+        self.final = numpy.fromstring(frames, dtype=numpy.int16)
+        self.final = abs(final)
+        self.final = final
+        masked = numpy.ma.masked_where(final < 0, final)
+        masked.fill_value = 0
+        self.final = numpy.ma.filled(masked)
+        self.wf.writeframes(in_data)
 
-    curve.setData(final[-20000:])
-    print final
-    return (frames, pyaudio.paContinue)
+        self.curve.setData(final[-20000:])
+        print self.final
+        return (self.frames, pyaudio.paContinue)
 
-def getaudio():
-    global final
-    frames = ''
-    p = pyaudio.PyAudio()
-    stream = p.open(format=FORMAT,
-                    channels=CHANNELS,
-                    rate=RATE, #sampling rate
-                    input=True,
-                    frames_per_buffer=CHUNK,
-                    stream_callback=callback)
-    stream.start_stream()
-    stream.stop_stream()
-    stream.close()
-    p.terminate()
+    def getaudio(self):
+        self.frames = ''
+        p = pyaudio.PyAudio()
+        stream = p.open(format=FORMAT,
+                        channels=CHANNELS,
+                        rate=RATE, #sampling rate
+                        input=True,
+                        frames_per_buffer=CHUNK,
+                        stream_callback=self.callback)
+        stream.start_stream()
+        stream.stop_stream()
+        stream.close()
+        p.terminate()
 
 
 def main():
