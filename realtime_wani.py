@@ -48,7 +48,7 @@ class Recorder(QtGui.QMainWindow):
         self.final = numpy.ma.filled(masked)
         self.wf.writeframes(in_data)
 
-        self.curve.setData(self.final[-20000:])
+        #self.curve.setData(self.final[-20000:])
         app.processEvents()
         print self.final
         return (self.frames, pyaudio.paContinue)
@@ -62,10 +62,13 @@ class Recorder(QtGui.QMainWindow):
                         input=True,
                         frames_per_buffer=CHUNK,
                         stream_callback=self.callback)
-        app.processEvents()
-        stream.start_stream()
-        time.sleep(2)
-        stream.stop_stream()
+        while(True):
+            stream.start_stream()
+            time.sleep(0.001)
+            stream.stop_stream()
+            self.curve.setData(self.final[-20000:])
+            app.processEvents()
+
         stream.close()
         p.terminate()
 
