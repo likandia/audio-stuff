@@ -32,22 +32,24 @@ class Recorder(QtGui.QMainWindow):
         self.wf.setnchannels(CHANNELS)
         self.wf.setsampwidth(2)
         self.wf.setframerate(RATE/4)
+        self.show()
 
-        timer = QtCore.QTimer()
-        timer.timeout.connect(self.getaudio)
-        timer.start(1)
+        self.getaudio()
+        #timer = QtCore.QTimer()
+        #timer.timeout.connect(self.getaudio)
+        #timer.start(1)
 
     def callback(self, in_data, frame_count, time_info, status):
         self.frames += in_data
-        self.final = numpy.fromstring(frames, dtype=numpy.int16)
-        self.final = abs(final)
-        self.final = final
-        masked = numpy.ma.masked_where(final < 0, final)
+        self.final = numpy.fromstring(self.frames, dtype=numpy.int16)
+        self.final = abs(self.final)
+        self.final = self.final
+        masked = numpy.ma.masked_where(self.final < 0, self.final)
         masked.fill_value = 0
         self.final = numpy.ma.filled(masked)
         self.wf.writeframes(in_data)
 
-        self.curve.setData(final[-20000:])
+        self.curve.setData(self.final[-20000:])
         print self.final
         return (self.frames, pyaudio.paContinue)
 
@@ -71,5 +73,4 @@ if __name__ == "__main__":
     if (sys.flags.interactive != 1) or not hasattr(QtCore, 'PYQT_VERSION'):
             app = pg.QtGui.QApplication(sys.argv)
             r = Recorder()
-            r.show()
             app.exec_()
